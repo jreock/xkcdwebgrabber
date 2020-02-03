@@ -10,15 +10,18 @@ request(xkcdUrl,{},(err, resp, body) => {
 
     if (err) { return console.log(err); }
 
-    const imgUrl = HTMLParser.parse(body)
+    const attr = HTMLParser.parse(body)
                        .querySelector('#comic')
                        .querySelector('img')
-                       .attributes
-                       .srcset;
+                       .attributes;
 
-    const cleanUrl = '<img src=\'https:' + imgUrl.split(' ')[0] + '\'\>';
+    const imgUrl = attr.srcset;
+    const altText = attr.title;
+
+    const cleanHtml = '<html><center><img src=\'https:' + imgUrl.split(' ')[0] + '\'\><br><h2>' 
+              + altText + '</h2></center></html>';
     res.writeHead(200, {'Content-Type': 'text/html'});
-    res.write(cleanUrl);
+    res.write(cleanHtml);
     res.end();
 
 });
